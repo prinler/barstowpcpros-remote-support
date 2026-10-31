@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:Remotely.Desktop.UI.ViewModels"
 			 xmlns:fakes="clr-namespace:Remotely.Desktop.UI.ViewModels.Fakes"
-             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="350"
+             mc:Ignorable="d" d:DesignWidth="460" d:DesignHeight="480"
              x:Class="Remotely.Desktop.UI.Views.MainView"
              x:DataType="vm:IMainViewViewModel">
 
@@ -12,69 +12,100 @@
 		<fakes:FakeMainViewViewModel />
 	</Design.DataContext>
 
-	<Grid ColumnDefinitions="200, *" Margin="10">
-		<StackPanel Grid.Column="0" Margin="0,0,10,0">
-			<TextBlock Classes="SectionHeader">Share Screen</TextBlock>
-			<TextBlock FontSize="16" Margin="0,10,0,5">Your Session ID:</TextBlock>
-			<TextBox Name="SessionIDTextBox" FontSize="16" Text="{Binding StatusMessage}" IsReadOnly="True"/>
-			<Grid Margin="0,10,0,0">
-				<TextBlock VerticalAlignment="Center">
-					Invite Link:
-				</TextBlock>
-				<Button HorizontalAlignment="Right" Classes="NormalButton" Command="{Binding CopyLinkCommand}">
-					Copy
-				</Button>
-			</Grid>
-			<TextBlock Margin="0,10,0,0" Foreground="DodgerBlue" IsVisible="{Binding IsCopyMessageVisible}" Opacity="{Binding CopyMessageOpacity}" HorizontalAlignment="Right">Copied to clipboard!</TextBlock>
-		</StackPanel>
+	<Grid RowDefinitions="Auto, 4, Auto, Auto, *, Auto" Background="{StaticResource BppPaper}">
 
-		<Grid Grid.Column="1" Margin="10,0,0,0" RowDefinitions="Auto, Auto, *, Auto">
-			<TextBlock Grid.Row="0" Classes="SectionHeader" Margin="0,0,0,10">Viewers</TextBlock>
-			<Grid Grid.Row="1" Margin="0,5,0,0">
-				<TextBlock FontSize="8" Margin="5,0,0,0">Name</TextBlock>
-				<TextBlock FontSize="8" Margin="0,0,5,0" HorizontalAlignment="Right">Has Control</TextBlock>
+		<!-- Header: dusk sky + badge, like the website header -->
+		<Border Grid.Row="0" Background="{StaticResource BppDusk}" Padding="18,14">
+			<Grid ColumnDefinitions="Auto, 14, *">
+				<Image Grid.Column="0" Width="56" Height="56" Source="{Binding Icon}" VerticalAlignment="Center" />
+				<StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="2">
+					<TextBlock Text="{Binding ProductName}" Foreground="{StaticResource BppCream}"
+							   FontSize="21" FontWeight="ExtraBold" TextTrimming="CharacterEllipsis" />
+					<TextBlock Text="REMOTE SUPPORT" Foreground="{StaticResource BppMint}"
+							   FontFamily="{StaticResource BppMono}" FontSize="11" FontWeight="SemiBold" />
+				</StackPanel>
 			</Grid>
-			<ListBox Grid.Row="2" Name="ViewerListBox" VerticalAlignment="Stretch" ItemsSource="{Binding Viewers}" SelectionMode="Multiple" SelectedItems="{Binding SelectedViewers}">
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<Grid VerticalAlignment="Center" ColumnDefinitions="*, Auto">
-							<TextBlock Grid.Column="0" Text="{Binding Name}" VerticalAlignment="Center" HorizontalAlignment="Stretch" TextTrimming="CharacterEllipsis"  />
-							<CheckBox Grid.Column="1" IsChecked="{Binding HasControl}" VerticalAlignment="Center" />
-						</Grid>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
-			<Button Grid.Row="3" Classes="NormalButton" HorizontalAlignment="Right"  Margin="0,5,0,0"
-					Command="{Binding RemoveViewersCommand}">
-				Remove
+		</Border>
+		<Border Grid.Row="1" Background="{StaticResource BppSun}" />
+
+		<!-- Session code card -->
+		<Border Grid.Row="2" Margin="16,16,16,0" Padding="16,14" Background="White"
+				BorderBrush="{StaticResource BppLine}" BorderThickness="1" CornerRadius="14">
+			<StackPanel Spacing="4">
+				<TextBlock Classes="Kicker" Text="YOUR SESSION CODE" />
+				<Grid ColumnDefinitions="*, Auto">
+					<SelectableTextBlock Name="SessionIDTextBox" Grid.Column="0"
+										 Text="{Binding StatusMessage}"
+										 FontFamily="{StaticResource BppMono}" FontSize="30" FontWeight="Bold"
+										 Foreground="{StaticResource BppInk}" VerticalAlignment="Center"
+										 TextTrimming="CharacterEllipsis" />
+					<Button Grid.Column="1" Classes="GhostButton" Command="{Binding CopyLinkCommand}"
+							ToolTip.Tip="Copy an invite link you can text or email to your technician">
+						Copy link
+					</Button>
+				</Grid>
+				<TextBlock TextWrapping="Wrap" Foreground="{StaticResource BppMuted}" FontSize="13">
+					Read this code to Steve, or text it to (760) 282-4859.
+				</TextBlock>
+				<TextBlock Foreground="{StaticResource BppTealInk}" FontWeight="SemiBold" FontSize="12"
+						   IsVisible="{Binding IsCopyMessageVisible}" Opacity="{Binding CopyMessageOpacity}">
+					Invite link copied to clipboard
+				</TextBlock>
+			</StackPanel>
+		</Border>
+
+		<!-- Connected technicians -->
+		<Grid Grid.Row="3" Margin="18,16,18,6" ColumnDefinitions="*, Auto">
+			<TextBlock Grid.Column="0" Classes="Kicker" Text="CONNECTED TECHNICIANS" />
+			<TextBlock Grid.Column="1" Classes="Kicker" Foreground="{StaticResource BppMuted}" Text="HAS CONTROL" />
+		</Grid>
+		<Border Grid.Row="4" Margin="16,0,16,0" Background="White" BorderBrush="{StaticResource BppLine}"
+				BorderThickness="1" CornerRadius="12" ClipToBounds="True">
+			<Grid>
+				<TextBlock Text="No one is connected yet." Foreground="{StaticResource BppMuted}" FontSize="13"
+						   HorizontalAlignment="Center" VerticalAlignment="Center"
+						   IsVisible="{Binding !Viewers.Count}" />
+				<ListBox Name="ViewerListBox" Background="Transparent" VerticalAlignment="Stretch"
+						 ItemsSource="{Binding Viewers}" SelectionMode="Multiple" SelectedItems="{Binding SelectedViewers}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Grid VerticalAlignment="Center" ColumnDefinitions="Auto, 10, *, Auto">
+								<Ellipse Grid.Column="0" Width="9" Height="9" Fill="{StaticResource BppMint}" Stroke="{StaticResource BppTeal}" StrokeThickness="1.5" VerticalAlignment="Center" />
+								<TextBlock Grid.Column="2" Text="{Binding Name}" FontWeight="SemiBold" Foreground="{StaticResource BppInk}"
+										   VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+								<CheckBox Grid.Column="3" IsChecked="{Binding HasControl}" VerticalAlignment="Center" />
+							</Grid>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+			</Grid>
+		</Border>
+
+		<!-- Footer -->
+		<Grid Grid.Row="5" Margin="16,10,16,14" ColumnDefinitions="Auto, *, Auto">
+			<Button x:Name="OptionsButton" Grid.Column="0"
+					BorderThickness="0" Background="Transparent"
+					VerticalAlignment="Center" HorizontalAlignment="Left"
+					Cursor="Hand" Height="26" Width="26" Padding="3"
+					VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
+					ToolTip.Tip="Settings"
+					Command="{Binding OpenOptionsMenu}"
+					CommandParameter="{Binding #OptionsButton}">
+				<Button.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="Change Server" Command="{Binding ChangeServerCommand}"></MenuItem>
+					</ContextMenu>
+				</Button.ContextMenu>
+				<Image Source="avares://Desktop.UI/Assets/Gear.png" Stretch="Uniform" Opacity="0.6" />
+			</Button>
+			<TextBlock Grid.Column="1" Margin="10,0" VerticalAlignment="Center" TextWrapping="Wrap"
+					   FontSize="12" Foreground="{StaticResource BppMuted}">
+				Close this window to end support any time.
+			</TextBlock>
+			<Button Grid.Column="2" Classes="NormalButton" Command="{Binding RemoveViewersCommand}"
+					ToolTip.Tip="Disconnect the selected technician">
+				Disconnect
 			</Button>
 		</Grid>
-		
-		<Button x:Name="OptionsButton"
-				BorderThickness="0"
-				Background="Transparent"
-				VerticalAlignment="Bottom"
-				HorizontalAlignment="Left"
-				Cursor="Hand"
-				Height="25"
-				Width="25"
-				Padding="2"
-				VerticalContentAlignment="Stretch"
-				HorizontalContentAlignment="Stretch"
-				Margin="10,5"
-				Command="{Binding OpenOptionsMenu}"
-				CommandParameter="{Binding #OptionsButton}"
-              >
-			<Button.ContextMenu>
-				<ContextMenu>
-					<MenuItem Header="Change Server" Command="{Binding ChangeServerCommand}"></MenuItem>
-				</ContextMenu>
-			</Button.ContextMenu>
-			<Image 
-				Source="avares://Desktop.UI/Assets/Gear.png"
-				VerticalAlignment="Stretch"
-				HorizontalAlignment="Stretch"
-				Stretch="Fill"/>
-		</Button>
 	</Grid>
 </UserControl>

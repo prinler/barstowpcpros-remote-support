@@ -2,28 +2,107 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Remotely.Desktop.UI.App"
 			 RequestedThemeVariant="Light">
+	<!-- Barstow PC Pros "Desert Dusk" palette (matches barstowpcpros.com) -->
+	<Application.Resources>
+		<SolidColorBrush x:Key="BppNight" Color="#071A20" />
+		<SolidColorBrush x:Key="BppDeep" Color="#0A2A30" />
+		<SolidColorBrush x:Key="BppTeal" Color="#0D4F59" />
+		<SolidColorBrush x:Key="BppTealInk" Color="#0B4650" />
+		<SolidColorBrush x:Key="BppMint" Color="#80D5CB" />
+		<SolidColorBrush x:Key="BppSun" Color="#F36B32" />
+		<SolidColorBrush x:Key="BppSunHover" Color="#FF8048" />
+		<SolidColorBrush x:Key="BppSunText" Color="#A8400F" />
+		<SolidColorBrush x:Key="BppPaper" Color="#FBF7F0" />
+		<SolidColorBrush x:Key="BppSand" Color="#F3E8D4" />
+		<SolidColorBrush x:Key="BppCream" Color="#F5EAD8" />
+		<SolidColorBrush x:Key="BppInk" Color="#0E1F22" />
+		<SolidColorBrush x:Key="BppMuted" Color="#4B5A5C" />
+		<SolidColorBrush x:Key="BppLine" Color="#E2D5BD" />
+		<LinearGradientBrush x:Key="BppDusk" StartPoint="0%,0%" EndPoint="100%,100%">
+			<GradientStop Offset="0" Color="#0B3D46" />
+			<GradientStop Offset="0.55" Color="#0A2F36" />
+			<GradientStop Offset="1" Color="#08232A" />
+		</LinearGradientBrush>
+		<FontFamily x:Key="BppMono">Cascadia Mono, Consolas, Courier New</FontFamily>
+		<FontFamily x:Key="BppDisplay">Segoe UI Variable Display, Segoe UI, Inter</FontFamily>
+	</Application.Resources>
+
     <Application.Styles>
-		<FluentTheme />
+		<FluentTheme>
+			<FluentTheme.Palettes>
+				<ColorPaletteResources x:Key="Light" Accent="#0D4F59" RegionColor="#FBF7F0" />
+			</FluentTheme.Palettes>
+		</FluentTheme>
+
+		<Style Selector="Window">
+			<Setter Property="Background" Value="{StaticResource BppPaper}" />
+			<Setter Property="FontFamily" Value="{StaticResource BppDisplay}" />
+		</Style>
 
 		<Style Selector="TextBlock.SectionHeader">
 			<Setter Property="FontWeight" Value="Bold"></Setter>
 			<Setter Property="FontSize" Value="18"></Setter>
+			<Setter Property="Foreground" Value="{StaticResource BppInk}"></Setter>
 		</Style>
+		<Style Selector="TextBlock.Kicker">
+			<Setter Property="FontFamily" Value="{StaticResource BppMono}" />
+			<Setter Property="FontSize" Value="11" />
+			<Setter Property="FontWeight" Value="SemiBold" />
+			<Setter Property="Foreground" Value="{StaticResource BppSunText}" />
+		</Style>
+
+		<!-- Primary: sunset orange, like "Call or text" on the website -->
 		<Style Selector="Button.NormalButton">
-			<Setter Property="Background" Value="White"></Setter>
-			<Setter Property="BorderThickness" Value="1"></Setter>
-			<Setter Property="BorderBrush" Value="Black"></Setter>
-			<Setter Property="Padding" Value="6,4"></Setter>
+			<Setter Property="Background" Value="{StaticResource BppSun}"></Setter>
+			<Setter Property="Foreground" Value="#11191B"></Setter>
+			<Setter Property="BorderThickness" Value="0"></Setter>
+			<Setter Property="CornerRadius" Value="10"></Setter>
+			<Setter Property="FontWeight" Value="SemiBold"></Setter>
+			<Setter Property="Padding" Value="14,7"></Setter>
+			<Setter Property="Cursor" Value="Hand"></Setter>
 			<Setter Property="HorizontalContentAlignment" Value="Center" />
 			<Setter Property="VerticalContentAlignment" Value="Center" />
 		</Style>
+		<Style Selector="Button.NormalButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{StaticResource BppSunHover}" />
+			<Setter Property="Foreground" Value="#11191B" />
+		</Style>
+		<Style Selector="Button.NormalButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#E55A22" />
+			<Setter Property="Foreground" Value="#11191B" />
+		</Style>
+
+		<!-- Secondary: outlined, warm line -->
+		<Style Selector="Button.GhostButton">
+			<Setter Property="Background" Value="White"></Setter>
+			<Setter Property="Foreground" Value="{StaticResource BppInk}"></Setter>
+			<Setter Property="BorderBrush" Value="{StaticResource BppLine}"></Setter>
+			<Setter Property="BorderThickness" Value="1.5"></Setter>
+			<Setter Property="CornerRadius" Value="10"></Setter>
+			<Setter Property="FontWeight" Value="SemiBold"></Setter>
+			<Setter Property="Padding" Value="14,7"></Setter>
+			<Setter Property="Cursor" Value="Hand"></Setter>
+			<Setter Property="HorizontalContentAlignment" Value="Center" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+		</Style>
+		<Style Selector="Button.GhostButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#F4FBF9" />
+			<Setter Property="BorderBrush" Value="{StaticResource BppTeal}" />
+			<Setter Property="Foreground" Value="{StaticResource BppInk}" />
+		</Style>
+
 		<Style Selector="Button.HyperlinkButton">
-			<Setter Property="Foreground" Value="DodgerBlue"></Setter>
+			<Setter Property="Foreground" Value="{StaticResource BppTealInk}"></Setter>
 			<Setter Property="BorderThickness" Value="0"></Setter>
 			<Setter Property="BorderBrush" Value="Transparent"></Setter>
 			<Setter Property="Cursor" Value="Hand"></Setter>
 			<Setter Property="Background" Value="Transparent"></Setter>
 			<Setter Property="Padding" Value="0"></Setter>
+		</Style>
+
+		<Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+			<Setter Property="Background" Value="{StaticResource BppSun}" />
+			<Setter Property="BorderBrush" Value="{StaticResource BppSun}" />
 		</Style>
     </Application.Styles>
 

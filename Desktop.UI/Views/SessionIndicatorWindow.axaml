@@ -1,11 +1,11 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Remotely.Desktop.UI.ViewModels"
 		xmlns:fakes="clr-namespace:Remotely.Desktop.UI.ViewModels.Fakes"
-        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="100"
-        Width="300"
+        mc:Ignorable="d" d:DesignWidth="320" d:DesignHeight="100"
+        Width="320"
         Height="100"
         x:Class="Remotely.Desktop.UI.Views.SessionIndicatorWindow"
 		x:DataType="vm:ISessionIndicatorWindowViewModel"
@@ -13,21 +13,26 @@
         Icon="{Binding WindowIcon}"
         WindowStartupLocation="Manual"
         Topmost="True"
+        Background="{StaticResource BppDusk}"
         SizeToContent="WidthAndHeight">
 
 	<Design.DataContext>
 		<fakes:FakeSessionIndicatorWindowViewModel />
 	</Design.DataContext>
-	
-  <Grid Margin="15 10 40 15" ColumnDefinitions="Auto, 10, *">
-	  <Image Grid.Column="0" Height="50" Width="50" Source="{Binding Icon}" VerticalAlignment="Center" />
-	  <StackPanel Grid.Column="2" VerticalAlignment="Center">
-        <TextBlock Classes="SectionHeader">
-          Remote Control Active
-        </TextBlock>
-        <TextBlock>
-          A remote control session has started.
-        </TextBlock>
-	  </StackPanel>
-  </Grid>
+
+	<Grid ColumnDefinitions="Auto, 12, *">
+		<Image Grid.Column="0" Margin="16,12,0,12" Height="50" Width="50" Source="{Binding Icon}" VerticalAlignment="Center" />
+		<StackPanel Grid.Column="2" Margin="0,12,28,12" VerticalAlignment="Center" Spacing="2">
+			<StackPanel Orientation="Horizontal" Spacing="7">
+				<Ellipse Width="9" Height="9" Fill="{StaticResource BppSun}" VerticalAlignment="Center" />
+				<TextBlock Text="REMOTE SUPPORT ACTIVE" Foreground="{StaticResource BppMint}"
+						   FontFamily="{StaticResource BppMono}" FontSize="11" FontWeight="SemiBold" />
+			</StackPanel>
+			<TextBlock Text="{Binding ProductName, StringFormat='{}{0} is connected'}" Foreground="{StaticResource BppCream}"
+					   FontSize="16" FontWeight="ExtraBold" />
+			<TextBlock Foreground="#C3D2CF" FontSize="12">
+				Close the support app to end the session.
+			</TextBlock>
+		</StackPanel>
+	</Grid>
 </Window>

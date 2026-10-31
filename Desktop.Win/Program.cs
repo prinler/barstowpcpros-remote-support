@@ -1,4 +1,4 @@
-﻿using Avalonia;
+using Avalonia;
 using Desktop.Shared.Services;
 using Remotely.Desktop.Shared.Services;
 using Remotely.Desktop.Shared.Startup;
@@ -19,6 +19,10 @@ namespace Remotely.Desktop.Win;
 
 public class Program
 {
+    // Barstow PC Pros: this build always knows where home is.
+    private const string DefaultServerUrl = "https://support.barstowpcpros.com/";
+    private const string DefaultOrganizationId = "3c13de52-0b85-4f0e-8e41-2e084f05d59c";
+
     // This is needed for the visual designer to work.
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
@@ -33,7 +37,7 @@ public class Program
         var version = AppVersionHelper.GetAppVersion();
         var logger = new FileLogger("Remotely_Desktop", version, "Program.cs");
         var filePath = Environment.ProcessPath ?? Environment.GetCommandLineArgs().First();
-        var serverUrl = Debugger.IsAttached ? "https://localhost:5001" : string.Empty;
+        var serverUrl = Debugger.IsAttached ? "https://localhost:5001" : DefaultServerUrl;
         var getEmbeddedResult =  EmbeddedServerDataProvider.Instance.TryGetEmbeddedData(filePath);
         if (getEmbeddedResult.IsSuccess)
         {
@@ -41,7 +45,7 @@ public class Program
         }
         else
         {
-            logger.LogWarning(getEmbeddedResult.Exception, "Failed to extract embedded server data.");
+            logger.LogInformation("No embedded server data in file name. Using built-in server {url}.", DefaultServerUrl);
         }
         var services = new ServiceCollection();
 
@@ -70,6 +74,16 @@ public class Program
             appState.Host = getEmbeddedResult.Value.ServerUrl.AbsoluteUri;
         }
 
+        if (string.IsNullOrWhiteSpace(appState.OrganizationId))
+        {
+            appState.OrganizationId = DefaultOrganizationId;
+        }
+
+        if (string.IsNullOrWhiteSpace(appState.Host))
+        {
+            appState.Host = serverUrl;
+        }
+
         if (appState.ArgDict.TryGetValue("org-id", out var orgId))
         {
             appState.OrganizationId = orgId;
@@ -77,7 +91,7 @@ public class Program
 
         var result = await provider.UseRemoteControlClient(
             args,
-            "The remote control client for Remotely.",
+            "Barstow PC Pros Remote Support.",
             serverUrl,
             false);
 

@@ -1,4 +1,4 @@
-﻿using Remotely.Desktop.Shared.Abstractions;
+using Remotely.Desktop.Shared.Abstractions;
 using Remotely.Desktop.Shared.Services;
 using Remotely.Shared.Models;
 using Microsoft.Extensions.Logging;
@@ -56,7 +56,7 @@ public class BrandingProvider : IBrandingProvider
             _logger.LogWarning(result.Exception, "Failed to extract embedded service data.");
             _brandingInfo = new()
             {
-                Product = "Remote Control"
+                Product = "Barstow PC Pros"
             };
         }
 

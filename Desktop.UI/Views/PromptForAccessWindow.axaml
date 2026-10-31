@@ -1,20 +1,20 @@
-﻿<Window xmlns="https://github.com/avaloniaui"
+<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Remotely.Desktop.UI.ViewModels"
 		xmlns:fakes="clr-namespace:Remotely.Desktop.UI.ViewModels.Fakes"
-        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="275"
+        mc:Ignorable="d" d:DesignWidth="470" d:DesignHeight="300"
         x:Class="Remotely.Desktop.UI.Views.PromptForAccessWindow"
 		x:DataType="vm:IPromptForAccessWindowViewModel"
 		x:Name="PromptForAccessWindowRef"
-        BorderBrush="DimGray"
+        BorderBrush="{StaticResource BppTeal}"
         BorderThickness="1"
-        Title="Remote Control Request" 
-        MinHeight="200"
-        MinWidth="250"
-        Height="275" 
-        Width="450"
+        Title="{Binding ProductName, StringFormat='{}{0} - Remote Control Request'}"
+        MinHeight="260"
+        MinWidth="320"
+        Height="300"
+        Width="470"
 		Topmost="True"
 		ShowActivated="True"
 	    WindowStartupLocation="CenterScreen"
@@ -24,34 +24,39 @@
 		<fakes:FakePromptForAccessViewModel />
 	</Design.DataContext>
 
-	<Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition />
-      <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
+	<Grid RowDefinitions="Auto, 4, *, Auto" Background="{StaticResource BppPaper}">
+		<Border Grid.Row="0" Background="{StaticResource BppDusk}" Padding="18,12">
+			<Grid ColumnDefinitions="Auto, 12, *">
+				<Image Grid.Column="0" Width="44" Height="44" Source="{Binding Icon}" VerticalAlignment="Center" />
+				<StackPanel Grid.Column="2" VerticalAlignment="Center" Spacing="2">
+					<TextBlock Text="REMOTE CONTROL REQUEST" Foreground="{StaticResource BppMint}"
+							   FontFamily="{StaticResource BppMono}" FontSize="11" FontWeight="SemiBold" />
+					<TextBlock Text="{Binding ProductName}" Foreground="{StaticResource BppCream}"
+							   FontSize="18" FontWeight="ExtraBold" TextTrimming="CharacterEllipsis" />
+				</StackPanel>
+			</Grid>
+		</Border>
+		<Border Grid.Row="1" Background="{StaticResource BppSun}" />
 
-    <StackPanel Grid.Row="0">
-      <TextBlock Classes="SectionHeader"  FontWeight="Bold" FontSize="18" Foreground="DimGray" Margin="10" TextWrapping="Wrap">
-        A remote control session has been requested.
-      </TextBlock>
+		<StackPanel Grid.Row="2" Margin="20,16,20,0" Spacing="10">
+			<TextBlock FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource BppInk}"
+					   TextWrapping="Wrap" Text="{Binding RequestMessage}" />
+			<Border BorderBrush="{StaticResource BppSun}" BorderThickness="3,0,0,0" Padding="10,2,0,2">
+				<TextBlock FontSize="13" Foreground="{StaticResource BppMuted}" TextWrapping="Wrap">
+					Only allow this if you are working with Barstow PC Pros right now. You can end the session any time by closing the support app.
+				</TextBlock>
+			</Border>
+		</StackPanel>
 
-      <TextBlock FontSize="16"
-                 Margin="10"
-                 TextWrapping="Wrap"
-                 Text="{Binding RequestMessage}"></TextBlock>
-
-    </StackPanel>
-
-    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-      <Button Width="60" Height="40" Content="Yes" Margin="10"
-              Classes="NormalButton"
-              Command="{Binding SetResultYes}"
-              CommandParameter="{Binding #PromptForAccessWindowRef}"></Button>
-      <Button Width="60" Height="40" Content="No" Margin="10"
-              Classes="NormalButton"
-              Command="{Binding SetResultNo}"
-              CommandParameter="{Binding #PromptForAccessWindowRef}"></Button>
-    </StackPanel>
-
-  </Grid>
+		<StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,12,20,18" Spacing="10">
+			<Button MinWidth="110" Height="40" Content="Don't allow"
+					Classes="GhostButton"
+					Command="{Binding SetResultNo}"
+					CommandParameter="{Binding #PromptForAccessWindowRef}"></Button>
+			<Button MinWidth="110" Height="40" Content="Allow"
+					Classes="NormalButton"
+					Command="{Binding SetResultYes}"
+					CommandParameter="{Binding #PromptForAccessWindowRef}"></Button>
+		</StackPanel>
+	</Grid>
 </Window>
